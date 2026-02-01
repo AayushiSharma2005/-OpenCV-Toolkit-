@@ -43,7 +43,31 @@ contours,h = cv2.findContours(th,cv2.RETR_TREE,
 
         masking: `hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 mask = cv2.inRange(hsv, lower_color, upper_color)
-res = cv2.bitwise_and(img, img, mask=mask)`
+res = cv2.bitwise_and(img, img, mask=mask)`,
+
+
+        invert: `res = cv2.bitwise_not(img)`,
+
+    sepia: `kernel = np.array([[0.272,0.534,0.131],
+                           [0.349,0.686,0.168],
+                           [0.393,0.769,0.189]])
+res = cv2.transform(img, kernel)
+res = np.clip(res,0,255).astype(np.uint8)`,
+
+    sketch: `gray_blur = cv2.GaussianBlur(gray,(21,21),0)
+res = cv2.divide(gray, gray_blur, scale=256)`,
+
+    cartoon: `gray_blur = cv2.medianBlur(gray,5)
+edges = cv2.adaptiveThreshold(gray_blur,255,
+       cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY,9,9)
+color = cv2.bilateralFilter(img,9,250,250)
+res = cv2.bitwise_and(color, color, mask=edges)`,
+
+    rotate_90: `res = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)`,
+
+    flip_horizontal: `res = cv2.flip(img,1)`,
+
+    flip_vertical: `res = cv2.flip(img,0)`
     };
 
     codeBox.textContent = codes[op] || "No code";
@@ -93,7 +117,7 @@ function processImage() {
     .then(blob => {
         const url = URL.createObjectURL(blob);
 
-        // Only update the processed card
+      
         document.getElementById("processed").src = url;
 
         // Status and download button
@@ -117,3 +141,4 @@ function downloadImage() {
     a.download = "processed_image.jpg";
     a.click();
 }
+
