@@ -23,11 +23,10 @@ CV Toolkit lets you **upload images**, apply **common computer vision operations
 
 ---
 
-## 🎬 Demo
+## 🎬 Demo Video 
 
 https://drive.google.com/file/d/1xXTeMn_zzoUx-Ep5D_y0s1J1hcQ9Hkvg/view?usp=drive_link 
-
-> Watch CV Toolkit in action! Drag and drop images, apply effects, and download processed results instantly.  
+ 
 
 ---
 
