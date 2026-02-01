@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smart CV Web App</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #2c3e50, #34495e); /* soft dark gradient */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* center landing page */
+    color: #fff;
+    overflow-x: hidden;
+}
+
+/* Landing Page */
+.landing-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+.landing-page h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    background: linear-gradient(90deg, #6dd5ed, #2193b0); /* soft gradient */
+    -webkit-background-clip: text;
+    color: transparent;
+    font-weight: 700;
+}
+.landing-page p {
+    opacity: 0.8;
+    margin-bottom: 30px;
+    font-size: 1.2rem;
+}
+.landing-page button {
+    padding: 15px 30px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(135deg,#89f7fe,#66a6ff);
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+.landing-page button:hover { opacity: 0.85; transform: scale(1.05); }
+
+/* Main App */
+.app-container {
+    display: none;
+    width: 100%;
+    max-width: 1000px;
+    padding: 30px;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.05);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    backdrop-filter: blur(15px);
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+.header h1 {
+    font-size: 2.6rem;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg,#6dd5ed,#2193b0);
+    -webkit-background-clip: text;
+    color: transparent;
+    font-weight: 700;
+}
+.header p { opacity: 0.8; }
+
+/* Images */
+.images {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+.img-card {
+    background: rgba(255,255,255,0.08);
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.15);
+}
+img {
+    border-radius: 15px;
+    border: 2px solid rgba(255,255,255,0.2);
+    width: 300px;
+}
+
+/* Status */
+#statusBox {
+    margin: 15px auto;
+    padding: 12px;
+    width: 90%;
+    display: none;
+    background: rgba(255,255,255,0.08);
+    border-left: 4px solid #6dd5ed;
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 20px 0;
+}
+input[type="file"] {
+    padding: 12px;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border-radius: 12px;
+    cursor: pointer;
+}
+button { cursor: pointer; }
+
+/* Panel */
+.panel {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 350px;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(15px);
+    padding: 25px;
+    transition: 0.5s ease;
+    overflow-y: auto; /* allow scrolling */
+    z-index: 1000;
+}
+.panel.open { right: 0; }
+
+.operation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.operation-list div {
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.12);
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.15);
+}
+.operation-list div:hover {
+    background: rgba(102,166,255,0.3);
+}
+.operation-list .active {
+    background: rgba(102,166,255,0.5);
+    border-color: #66a6ff;
+}
+
+/* Floating button */
+.fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(135deg,#89f7fe,#66a6ff);
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    font-weight: 700;
+}
+</style>
+</head>
+<body>
+
+<!-- Landing Page -->
+<div class="landing-page" id="landing">
+    <h1>CV Toolkit</h1>
+    <p>OpenCV-powered vision tools</p>
+    <button onclick="startApp()">Start</button>
+</div>
+
+<!-- Main App -->
+<div class="app-container" id="appContainer">
+    <div class="header">
+        <h1>CV Toolkit</h1>
+        <p>Explore, Process, Transform Images with CV</p>
+    </div>
+
+    <div class="images">
+        <div class="img-card">
+            <h4>Original</h4>
+            <img id="original">
+        </div>
+        <div class="img-card">
+            <h4>Processed</h4>
+            <img id="processed">
+        </div>
+    </div>
+
+    <div id="statusBox"></div>
+
+    <h3>Operation Code</h3>
+    <pre id="codeSnippet">Select an operation…</pre>
+
+    <div class="controls">
+        <input type="file" id="fileInput">
+        <button onclick="uploadImage()">Upload</button>
+        <button id="downloadBtn" style="display:none;" onclick="downloadImage()">Download</button>
+    </div>
+</div>
+
+<div class="fab" onclick="togglePanel()">⚙</div>
+
+<!-- Panel -->
+<div class="panel" id="panel">
+    <h3>Choose Operation</h3>
+    <div id="operationList" class="operation-list">
+        <div onclick="selectOp('grayscale')">Grayscale</div>
+        <div onclick="selectOp('threshold')">Threshold</div>
+        <div onclick="selectOp('adaptive')">Adaptive Threshold</div>
+        <div onclick="selectOp('canny')">Edge Detection</div>
+        <div onclick="selectOp('contours')">Contours</div>
+        <div onclick="selectOp('blur')">Gaussian Blur</div>
+        <div onclick="selectOp('resize_up')">Upsample</div>
+        <div onclick="selectOp('resize_down')">Downsample</div>
+        <div onclick="selectOp('masking')">Color Masking</div>
+    </div>
+    <button onclick="processImage()">Apply</button>
+</div>
+
+<script src="/static/script.js"></script>
+<script>
+function togglePanel() {
+    document.getElementById("panel").classList.toggle("open");
+}
+function startApp() {
+    document.getElementById('landing').style.display = 'none';
+    document.getElementById('appContainer').style.display = 'block';
+}
+</script>
+</body>
+</html>
